@@ -3,13 +3,12 @@ from django.db.models import F, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from users.models import Subscription
 
 from .pagination import CustomPageNumberPagination
@@ -20,7 +19,6 @@ from .serializers import (AuthorSubscriptionSerializer,
                           RecipeListSerializer, RecipesForActionsSerializer,
                           ShoppingCartSerializer, SubscriptionSerializer,
                           TagSerializer)
-
 
 User = get_user_model()
 
@@ -65,7 +63,7 @@ class SubscriptionViewSet(CreateDeleteViewSet):
 
         return Response(AuthorSubscriptionSerializer(
             author, context={'request': request}).data,
-                        status=status.HTTP_201_CREATED)
+            status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         author_id = kwargs.get('user_id')
@@ -114,7 +112,7 @@ class FavoriteViewSet(CreateDeleteViewSet):
         serializer.save()
         return Response(RecipesForActionsSerializer(
             recipe, context={'request': request}).data,
-                        status=status.HTTP_200_OK)
+            status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
@@ -187,7 +185,7 @@ class ShoppingCartApiView(APIView):
         serializer.save()
         return Response(RecipesForActionsSerializer(
             recipe, context={'request': request}).data,
-                        status=status.HTTP_200_OK)
+            status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         user = request.user

@@ -12,13 +12,13 @@ class User(AbstractUser):
         (USER, 'User'),
         (ADMIN, 'Administrator'),
         (ANONYMOUS, 'AnonymousUser')
-        ]
+    ]
     role = models.CharField(
-            choices=USER_ROLES,
-            default=USER,
-            blank=False,
-            max_length=16
-        )
+        choices=USER_ROLES,
+        default=USER,
+        blank=False,
+        max_length=16
+    )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['id', 'username', 'first_name', 'last_name']
 

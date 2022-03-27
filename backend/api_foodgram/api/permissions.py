@@ -19,5 +19,5 @@ class ReadAndOwner(permissions.BasePermission):
         """Метод проверяет является метод безопасным или
         пользователь это автор.
         """
-        return (request.method in permissions.SAFE_METHODS or
-                obj.author == request.user)
+        return (request.method in permissions.SAFE_METHODS
+                or obj.author == request.user)

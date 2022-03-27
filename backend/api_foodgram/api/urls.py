@@ -1,11 +1,9 @@
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-
 from api.views import (FavoriteViewSet, IngredientViewSet, RecipeViewSet,
                        ShoppingCartApiView, SubscriptionsViewSet,
                        SubscriptionViewSet, TagViewSet, UserCreateListRetrieve,
                        download_shopping_cart)
-
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
 user_pk = UserCreateListRetrieve.as_view(
     {'get': 'get_user', 'post': 'set_password'}
