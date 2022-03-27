@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -13,7 +12,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,8 +72,6 @@ DATABASES = {
     }
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -130,13 +126,10 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-
-          "LOGIN_FIELD": 'email',
-          "SERIALIZERS": {'current_user': 'api.serializers.CustomUserSerializer',
-                          'user': 'api.serializers.CustomUserSerializer'},
-          'PERMISSIONS': {'user_list': ['rest_framework.permissions.AllowAny'],
-                          },
-          'ACCESS_TOKEN_LIFETIME': timedelta(hours=500)
-          }
-
-
+    "LOGIN_FIELD": 'email',
+    "SERIALIZERS": {'current_user': 'api.serializers.CustomUserSerializer',
+                    'user': 'api.serializers.CustomUserSerializer'},
+    "PERMISSIONS": {'user_list': ['rest_framework.permissions.AllowAny'],
+                    },
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=500)
+}
