@@ -12,7 +12,7 @@ ____
 
 	DB_ENGINE=django.db.backends.postgresql (указываем, что работаем с postgresql)
 	DB_NAME=postgres (имя базы данных)
-	POSTGRES_USER=postgres (логин для подключения к базе данных)
+	POSTGRES_USER=postgres  (логин для подключения к базе данных)
 	POSTGRES_PASSWORD= yourpassword (пароль для подключения к БД (установите свой))
 	DB_HOST=db (название сервиса (контейнера))
 	DB_PORT=5432 (порт для подключения к БД)
