@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - /home/anzhela/.env
+      - ./.env
     ports:
       - "5432:5432"
 
@@ -31,7 +31,7 @@ services:
       - db
     env_file:
 #      - ../backend/api_foodgram/.env
-      - /home/anzhela/.env
+      - ./.env
 
   frontend:
     build:
