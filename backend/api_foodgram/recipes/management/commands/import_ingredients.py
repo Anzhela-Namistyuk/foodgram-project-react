@@ -11,7 +11,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         csv_file = '/app/ingredients.csv'
         with open(csv_file, newline='', encoding='utf-8') as f:
-            reader = csv.DictReader(f, fieldnames=['name', 'measurement_unit'])
+            reader = csv.DictReader(
+                f, fieldnames=['name', 'measurement_unit'])
             count = 0
             for row in reader:
                 Ingredient.objects.update_or_create(
