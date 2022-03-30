@@ -5,11 +5,9 @@ from django.core.files.base import ContentFile
 from django.core.validators import MinValueValidator
 from django.db import transaction
 from rest_framework import serializers
-
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from users.models import Subscription
-
 
 User = get_user_model()
 
