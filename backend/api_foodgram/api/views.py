@@ -3,14 +3,14 @@ from django.db.models import F, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.models import Subscription
 
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
+from users.models import Subscription
 from .pagination import CustomPageNumberPagination
 from .permissions import ReadAndOwner
 from .serializers import (AuthorSubscriptionSerializer,
@@ -39,10 +39,10 @@ class UserCreateListRetrieve(UserViewSet):
             self.queryset, many=True).data)
 
     @action(detail=False, methods=['get'])
-    def get_user(self, request, pk=None, *args, **kwargs):
-        if pk == 'me':
+    def get_user(self, request, user_id=None, *args, **kwargs):
+        if user_id == 'me':
             return self.me(request, *args, **kwargs)
-        user = get_object_or_404(User, pk=pk)
+        user = get_object_or_404(User, pk=user_id)
         return Response(self.get_serializer(user).data)
 
 
@@ -141,15 +141,13 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
     permission_classes = [ReadAndOwner, ]
     pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
             return CreateUpdateRecipeSerializer
-        else:
-            return RecipeListSerializer
+        return RecipeListSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

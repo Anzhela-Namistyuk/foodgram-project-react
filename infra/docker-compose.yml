@@ -19,10 +19,6 @@ services:
 
   backend:
     image: anzhelanamistyuk/foodgram:latest
-
-#    build:
-#      context: ../backend/api_foodgram
-#      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_backend_value:/app/static_backend/
@@ -30,14 +26,10 @@ services:
     depends_on:
       - db
     env_file:
-#      - ../backend/api_foodgram/.env
       - ./.env
 
   frontend:
     image: anzhelanamistyuk/foodgram_front:latest
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
@@ -56,5 +48,3 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
     depends_on:
       - frontend
-
-

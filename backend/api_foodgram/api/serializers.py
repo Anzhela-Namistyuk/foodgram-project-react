@@ -2,11 +2,14 @@ import base64
 
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
+from django.core.validators import MinValueValidator
 from django.db import transaction
+from rest_framework import serializers
+
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
-from rest_framework import serializers
 from users.models import Subscription
+
 
 User = get_user_model()
 
@@ -45,13 +48,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         model = Subscription
         fields = ('subscriber', 'author')
 
-    validators = [
-        serializers.UniqueTogetherValidator(
-            queryset=Subscription.objects.all(),
-            fields=('subscriber', 'author'),
-            message='Вы уже подписаны на автора'
-        )
-    ]
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Subscription.objects.all(),
+                fields=('subscriber', 'author'),
+                message='Вы уже подписаны на автора'
+            )
+        ]
 
     def validate(self, data):
         request = self.context['request']
@@ -71,7 +74,8 @@ class RecipesForActionsSerializer(serializers.ModelSerializer):
 
 class AuthorSubscriptionSerializer(serializers.ModelSerializer):
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.IntegerField(
+        source='recipes.count', read_only=True)
     is_subscribed = serializers.SerializerMethodField()
 
     def get_recipes(self, obj):
@@ -81,9 +85,6 @@ class AuthorSubscriptionSerializer(serializers.ModelSerializer):
         recipes = obj.recipes.all()[:recipes_limit]
         return RecipesForActionsSerializer(
             recipes, many=True).data
-
-    def get_recipes_count(self, obj):
-        return obj.recipes.count()
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
@@ -208,7 +209,8 @@ class AddIngredientForRecipeSerializer(serializers.ModelSerializer):
         source='ingredient',
         queryset=Ingredient.objects.all()
     )
-    amount = serializers.IntegerField(write_only=True)
+    amount = serializers.IntegerField(write_only=True,
+                                      validators=[MinValueValidator(1)])
 
     class Meta:
         model = IngredientRecipe
@@ -236,6 +238,10 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageFile()
     author = CustomUserSerializer(required=False)
 
+    class Meta:
+        model = Recipe
+        exclude = ('pub_date',)
+
     @transaction.atomic
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredientrecipe_set')
@@ -249,7 +255,6 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
                 ingredient=ingredient['ingredient'],
                 amount=ingredient['amount'])
             for ingredient in ingredients]
-
         IngredientRecipe.objects.bulk_create(
             create_ingredients)
         return recipe
@@ -288,10 +293,6 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
             user__id=obj.author.id, recipe__pk=obj.id).exists()
         return representation
 
-    class Meta:
-        model = Recipe
-        exclude = ('pub_date',)
-
     def validate_tags(self, data):
         if not data:
             raise serializers.ValidationError('Выберите тег/теги')
@@ -301,8 +302,4 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError('Выберите ингредиент')
-        for ingredient in ingredients:
-            if int(ingredient['amount']) <= 0:
-                raise serializers.ValidationError(
-                    'Количество должно быть больше нуля')
         return data

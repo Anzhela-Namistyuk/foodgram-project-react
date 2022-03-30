@@ -5,7 +5,7 @@ from api.views import (FavoriteViewSet, IngredientViewSet, RecipeViewSet,
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-user_pk = UserCreateListRetrieve.as_view(
+user_value = UserCreateListRetrieve.as_view(
     {'get': 'get_user', 'post': 'set_password'}
 )
 subscription = SubscriptionViewSet.as_view(
@@ -34,7 +34,7 @@ urlpatterns = [
          name='download'),
     path('recipes/<recipe_id>/shopping_cart/', ShoppingCartApiView.as_view(),
          name='shopping_cart'),
-    path('users/<pk>/', user_pk, name='get_user_or_set_password'),
+    path('users/<user_id>/', user_value, name='get_user_or_set_password'),
     path('', include(router.urls)),
     path(r'auth/', include('djoser.urls.authtoken')),
 ]

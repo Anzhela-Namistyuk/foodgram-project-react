@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Exists, OuterRef
 
+
 User = get_user_model()
 
 
@@ -132,7 +133,8 @@ class IngredientRecipe(models.Model):
         related_name='recipes',
         verbose_name='Рецепт'
     )
-    amount = models.IntegerField(validators=[MinValueValidator(1)])
+    amount = models.PositiveIntegerField(
+        verbose_name='Количество')
 
     class Meta:
         constraints = [

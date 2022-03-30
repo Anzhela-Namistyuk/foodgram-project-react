@@ -68,9 +68,9 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
+          with:
+            context: ./foodgram
           script: |
-            # Выполняет pull образа с DockerHub
-            sudo docker pull anzhelanamistyuk/foodgram:latest
             sudo docker-compose stop
             sudo docker-compose rm backend
             touch .env
