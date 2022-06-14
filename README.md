@@ -45,7 +45,10 @@ Python 3, Django, Docker, Gunicorn, nginx, PostgreSQL
 ```bash
 .env
 ```
-2. Активировать виртуальное акружение в директории foodgram-project-react 
+2. Установите и активируйте виртуальное окружение в директории foodgram-project-react 
+```
+python3 -m venv venv
+```
 ```bash
  source venv/bin/activate.
 ```
